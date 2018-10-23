@@ -4294,17 +4294,6 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$FileSystem$Default = {$: 'Default'};
-var author$project$FileSystem$FileSystemState = F2(
-	function (a, b) {
-		return {$: 'FileSystemState', a: a, b: b};
-	});
-var author$project$FileSystem$Global = {$: 'Global'};
-var author$project$FileSystem$Raw = function (a) {
-	return {$: 'Raw', a: a};
-};
-var author$project$FileSystem$defaultOptions = author$project$FileSystem$Raw(
-	A2(author$project$FileSystem$FileSystemState, author$project$FileSystem$Global, author$project$FileSystem$Default));
 var author$project$FileSystem$FileSystem = F2(
 	function (a, b) {
 		return {$: 'FileSystem', a: a, b: b};
@@ -4973,25 +4962,40 @@ var author$project$FileSystem$fromOptions = function (options) {
 				author$project$FileSystem$Node$sort,
 				A2(author$project$FileSystem$generate, 'my-project', options))));
 };
-var author$project$FileSystem$default = author$project$FileSystem$fromOptions(author$project$FileSystem$defaultOptions);
+var author$project$FileSystem$Options$Default = {$: 'Default'};
+var author$project$FileSystem$Options$FileSystemState = F2(
+	function (a, b) {
+		return {$: 'FileSystemState', a: a, b: b};
+	});
+var author$project$FileSystem$Options$Global = {$: 'Global'};
+var author$project$FileSystem$Options$Raw = function (a) {
+	return {$: 'Raw', a: a};
+};
+var author$project$FileSystem$Options$default = author$project$FileSystem$Options$Raw(
+	A2(author$project$FileSystem$Options$FileSystemState, author$project$FileSystem$Options$Global, author$project$FileSystem$Options$Default));
+var author$project$FileSystem$default = author$project$FileSystem$fromOptions(author$project$FileSystem$Options$default);
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$initialModel = function (flags) {
 	return _Utils_Tuple2(
-		{filesystem: author$project$FileSystem$default, options: author$project$FileSystem$defaultOptions},
+		{filesystem: author$project$FileSystem$default, options: author$project$FileSystem$Options$default},
 		elm$core$Platform$Cmd$none);
 };
-var author$project$FileSystem$Compiled = function (a) {
+var author$project$FileSystem$Options$Compiled = function (a) {
 	return {$: 'Compiled', a: a};
 };
-var author$project$FileSystem$compile = function (options) {
+var author$project$FileSystem$Options$compile = function (options) {
 	if (options.$ === 'Raw') {
 		var flags = options.a;
-		return author$project$FileSystem$Compiled(flags);
+		return author$project$FileSystem$Options$Compiled(flags);
 	} else {
 		var flags = options.a;
-		return author$project$FileSystem$Compiled(flags);
+		return author$project$FileSystem$Options$Compiled(flags);
 	}
+};
+var author$project$FileSystem$compile = function (options) {
+	return author$project$FileSystem$fromOptions(
+		author$project$FileSystem$Options$compile(options));
 };
 var author$project$Main$update = F2(
 	function (msg, model) {
@@ -5002,8 +5006,7 @@ var author$project$Main$update = F2(
 				_Utils_update(
 					model,
 					{
-						filesystem: author$project$FileSystem$fromOptions(
-							author$project$FileSystem$compile(model.options))
+						filesystem: author$project$FileSystem$compile(model.options)
 					}),
 				elm$core$Platform$Cmd$none);
 		}

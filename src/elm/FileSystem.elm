@@ -1,8 +1,9 @@
-module FileSystem exposing (FileSystem(..), Focus, Options, compile, default, defaultOptions, fromOptions)
+module FileSystem exposing (FileSystem(..), Focus, compile, default, fromOptions)
 
 import FileSystem.File as File
 import FileSystem.File.Content as Content
 import FileSystem.Node as Node exposing (Node)
+import FileSystem.Options as Options exposing (FileSystemState(..), Options(..), Output(..))
 
 
 type FileSystem
@@ -12,28 +13,6 @@ type FileSystem
 type Focus
     = None
     | Focus File.Data
-
-
-type Options
-    = Raw FileSystemState
-    | Compiled FileSystemState
-
-
-type FileSystemState
-    = FileSystemState ElmSource Output
-
-
-type ElmSource
-    = Local
-    | Global
-
-
-type Output
-    = Default
-    | Build
-    | CustomBuild
-    | BuildDir
-    | CustomBuildDir
 
 
 outputNode : String -> FileSystemState -> List Node
@@ -97,19 +76,10 @@ fromOptions options =
 
 default : FileSystem
 default =
-    fromOptions defaultOptions
+    fromOptions Options.default
 
 
-defaultOptions : Options
-defaultOptions =
-    Raw (FileSystemState Global Default)
-
-
-compile : Options -> Options
+compile : Options -> FileSystem
 compile options =
-    case options of
-        Raw flags ->
-            Compiled flags
-
-        Compiled flags ->
-            Compiled flags
+    Options.compile options
+        |> fromOptions

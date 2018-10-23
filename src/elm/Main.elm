@@ -1,7 +1,8 @@
 module Main exposing (main)
 
 import Browser
-import FileSystem exposing (FileSystem, Options)
+import FileSystem exposing (FileSystem)
+import FileSystem.Options as Options exposing (Options)
 import Html exposing (Html)
 import Html.Events exposing (onClick)
 import View.FileSystem exposing (files)
@@ -15,7 +16,7 @@ type alias Model =
 
 initialModel : () -> ( Model, Cmd Msg )
 initialModel flags =
-    ( { filesystem = FileSystem.default, options = FileSystem.defaultOptions }, Cmd.none )
+    ( { filesystem = FileSystem.default, options = Options.default }, Cmd.none )
 
 
 type Msg
@@ -30,7 +31,7 @@ update msg model =
             ( model, Cmd.none )
 
         Compile ->
-            ( { model | filesystem = FileSystem.fromOptions (FileSystem.compile model.options) }, Cmd.none )
+            ( { model | filesystem = FileSystem.compile model.options }, Cmd.none )
 
 
 view : Model -> Html Msg
