@@ -9,7 +9,7 @@
     "elm-live": "3.2.0"
   },
   "scripts": {
-    "dev:elm": "elm-live src/elm/Main.elm --dir build -- --output build/elm.js"
+    "dev:elm": "elm-live src/elm/Main.elm --dir build --open -- --debug --output build/elm.js"
   },
   "repository": {
     "type": "git",

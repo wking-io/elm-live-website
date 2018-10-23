@@ -2,6 +2,7 @@ module FileSystem exposing (FileSystem(..), Focus, compile, default, fromOptions
 
 import FileSystem.File as File
 import FileSystem.File.Content as Content
+import FileSystem.File.Id as Id exposing (Id)
 import FileSystem.Node as Node exposing (Node)
 import FileSystem.Options as Options exposing (FileSystemState(..), Options(..), Output(..))
 
@@ -13,6 +14,34 @@ type FileSystem
 type Focus
     = None
     | Focus File.Data
+
+
+updateFocus : Id -> FileSystem -> FileSystem
+updateFocus newId ((FileSystem focus node) as filesystem) =
+    case focus of
+        None ->
+            FileSystem (findFocus id node) node
+
+        Focus { id } ->
+            if id == newId then
+                filesystem
+
+            else
+                FileSystem (findFocus id node) node
+
+
+findFocus : Id -> Node -> Focus
+findFocus id node =
+    case Node.find id node of
+        Ok data ->
+            Focus data
+
+        Err _ ->
+            let
+                _ =
+                    Debug.log "No file found with id of:" id
+            in
+            None
 
 
 outputNode : String -> FileSystemState -> List Node

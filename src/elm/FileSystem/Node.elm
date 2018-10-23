@@ -20,6 +20,9 @@ sort node =
         File { name } ->
             "b" ++ name
 
+find : Id -> Node -> File.Data
+find id node =
+    
 
 makeFile : Extension -> String -> String -> String -> Node
 makeFile extension parent name contents =

@@ -1,4 +1,4 @@
-module FileSystem.File.Extension exposing (Extension(..), toString)
+module FileSystem.File.Extension exposing (Extension(..), toExtension, toString)
 
 
 type Extension
@@ -13,16 +13,21 @@ toString : Extension -> String
 toString extension =
     case extension of
         Js ->
-            ".js"
+            "js"
 
         Json ->
-            ".json"
+            "json"
 
         Elm ->
-            ".elm"
+            "elm"
 
         Css ->
-            ".css"
+            "css"
 
         Html ->
-            ".html"
+            "html"
+
+
+toExtension : Extension -> String
+toExtension ext =
+    "." ++ toString ext
