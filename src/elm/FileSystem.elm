@@ -1,4 +1,4 @@
-module FileSystem exposing (FileSystem(..), Focus, compile, default, fromOptions)
+module FileSystem exposing (FileSystem(..), Focus(..), compile, default, fromOptions, updateFocus)
 
 import FileSystem.File as File
 import FileSystem.File.Content as Content
@@ -20,20 +20,24 @@ updateFocus : Id -> FileSystem -> FileSystem
 updateFocus newId ((FileSystem focus node) as filesystem) =
     case focus of
         None ->
-            FileSystem (findFocus id node) node
+            FileSystem (findFocus newId node) node
 
         Focus { id } ->
-            if id == newId then
+            if Id.equal newId id then
                 filesystem
 
             else
-                FileSystem (findFocus id node) node
+                FileSystem (findFocus newId node) node
 
 
 findFocus : Id -> Node -> Focus
 findFocus id node =
     case Node.find id node of
         Ok data ->
+            let
+                _ =
+                    Debug.log "File found with id of:" data.id
+            in
             Focus data
 
         Err _ ->

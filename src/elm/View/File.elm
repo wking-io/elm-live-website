@@ -22,11 +22,12 @@ viewItem focus { id, name, extension } msg =
         ]
 
 
-viewContent : File.Data -> Html msg
-viewContent { id, contents } =
+viewContent : Bool -> File.Data -> Html msg
+viewContent isHidden { id, contents } =
     Html.div
         [ HA.attribute "role" "tabpanel"
         , HA.attribute "aria-labelledby" (Id.toString id ++ "-tab")
         , HA.id (Id.toString id)
+        , HA.hidden (not isHidden)
         ]
         [ Html.text contents ]

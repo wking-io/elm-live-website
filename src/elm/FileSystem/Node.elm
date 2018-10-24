@@ -1,8 +1,8 @@
-module FileSystem.Node exposing (Node(..), makeClosedFolder, makeCssFile, makeElmFile, makeHtmlFile, makeJsFile, makeJsonFile, makeOpenFolder, sort)
+module FileSystem.Node exposing (Node(..), find, makeClosedFolder, makeCssFile, makeElmFile, makeHtmlFile, makeJsFile, makeJsonFile, makeOpenFolder, sort)
 
 import FileSystem.File as File
 import FileSystem.File.Extension exposing (Extension(..))
-import FileSystem.File.Id as Id
+import FileSystem.File.Id as Id exposing (Id)
 import FileSystem.Folder as Folder
 
 
@@ -20,9 +20,37 @@ sort node =
         File { name } ->
             "b" ++ name
 
-find : Id -> Node -> File.Data
+
+getFiles : Node -> List File.Data
+getFiles node =
+    case node of
+        Folder _ nodes ->
+            List.concatMap getFiles nodes
+
+        File data ->
+            [ data ]
+
+
+find : Id -> Node -> Result Id File.Data
 find id node =
-    
+    node
+        |> getFiles
+        |> findFile id
+
+
+findFile : Id -> List File.Data -> Result Id File.Data
+findFile id files =
+    case files of
+        [] ->
+            Err id
+
+        first :: rest ->
+            if Id.equal first.id id then
+                Ok first
+
+            else
+                findFile id rest
+
 
 makeFile : Extension -> String -> String -> String -> Node
 makeFile extension parent name contents =

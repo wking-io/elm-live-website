@@ -1,4 +1,4 @@
-module FileSystem.File.Id exposing (Id, generate, toString)
+module FileSystem.File.Id exposing (Id, equal, generate, toString)
 
 import FileSystem.File.Extension as Extension exposing (Extension)
 
@@ -18,3 +18,8 @@ generate parent filename filetype =
 toString : Id -> String
 toString (Id id) =
     id
+
+
+equal : Id -> Id -> Bool
+equal (Id x) (Id y) =
+    x == y

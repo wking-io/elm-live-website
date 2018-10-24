@@ -3,12 +3,13 @@ module Main exposing (main)
 import Browser
 import Browser.Dom as Dom exposing (Error(..))
 import FileSystem exposing (FileSystem)
-import FileSystem.File.Id exposing (Id)
+import FileSystem.File.Id as Id exposing (Id)
 import FileSystem.Options as Options exposing (Options)
 import Html exposing (Html)
+import Html.Attributes as HA
 import Html.Events exposing (onClick)
 import Task
-import View.FileSystem exposing (files)
+import View.FileSystem exposing (contents, files)
 
 
 type alias Model =
@@ -40,7 +41,7 @@ update msg model =
             ( { model | filesystem = FileSystem.compile model.options }, Cmd.none )
 
         ChangeFocus id ->
-            ( { model | filesystem = FileSystem.updateFocus id filesystem }, Task.attempt FocusResult (Dom.focus id) )
+            ( { model | filesystem = FileSystem.updateFocus id model.filesystem }, Task.attempt FocusResult (Dom.focus (Id.toString id)) )
 
         FocusResult result ->
             case result of
@@ -61,7 +62,10 @@ update msg model =
 view : Model -> Html Msg
 view { filesystem } =
     Html.div []
-        [ files filesystem ChangeFocus
+        [ Html.div [ HA.class "flex" ]
+            [ files filesystem ChangeFocus
+            , contents filesystem
+            ]
         , Html.button [ onClick Compile ] [ Html.text "Compile" ]
         ]
 
