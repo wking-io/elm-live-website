@@ -1,8 +1,11 @@
 module FileSystem.Folder exposing (Data, Visibility(..), mapClosed, mapOpen)
 
+import FileSystem.Id exposing (Id)
+
 
 type alias Data =
-    { name : String
+    { id : Id
+    , name : String
     , visibility : Visibility
     }
 

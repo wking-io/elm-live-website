@@ -1,9 +1,9 @@
 module FileSystem.Node exposing (Node(..), find, makeClosedFolder, makeCssFile, makeElmFile, makeHtmlFile, makeJsFile, makeJsonFile, makeOpenFolder, sort)
 
 import FileSystem.File as File
-import FileSystem.File.Extension exposing (Extension(..))
-import FileSystem.File.Id as Id exposing (Id)
+import FileSystem.File.Extension as Extension exposing (Extension(..))
 import FileSystem.Folder as Folder
+import FileSystem.Id as Id exposing (Id)
 
 
 type Node
@@ -55,7 +55,7 @@ findFile id files =
 makeFile : Extension -> String -> String -> String -> Node
 makeFile extension parent name contents =
     File
-        { id = Id.generate parent name extension
+        { id = Id.generate (parent ++ name ++ Extension.toString extension)
         , extension = extension
         , name = name
         , contents = contents
@@ -87,16 +87,16 @@ makeHtmlFile =
     makeFile Html
 
 
-makeFolder : Folder.Visibility -> String -> List Node -> Node
-makeFolder visibility name children =
-    Folder { visibility = visibility, name = name } children
+makeFolder : Folder.Visibility -> String -> String -> List Node -> Node
+makeFolder visibility parent name children =
+    Folder { id = Id.generate (parent ++ name), visibility = visibility, name = name } children
 
 
-makeOpenFolder : String -> List Node -> Node
+makeOpenFolder : String -> String -> List Node -> Node
 makeOpenFolder =
     Folder.mapOpen makeFolder
 
 
-makeClosedFolder : String -> List Node -> Node
+makeClosedFolder : String -> String -> List Node -> Node
 makeClosedFolder =
     Folder.mapClosed makeFolder

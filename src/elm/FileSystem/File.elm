@@ -1,7 +1,7 @@
 module FileSystem.File exposing (Data)
 
-import FileSystem.File.Extension exposing (Extension(..))
-import FileSystem.File.Id as Id exposing (Id)
+import FileSystem.File.Extension exposing (Extension)
+import FileSystem.Id exposing (Id)
 
 
 type alias Data =

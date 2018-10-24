@@ -2,7 +2,7 @@ module FileSystem exposing (FileSystem(..), Focus(..), compile, default, fromOpt
 
 import FileSystem.File as File
 import FileSystem.File.Content as Content
-import FileSystem.File.Id as Id exposing (Id)
+import FileSystem.Id as Id exposing (Id)
 import FileSystem.Node as Node exposing (Node)
 import FileSystem.Options as Options exposing (FileSystemState(..), Options(..), Output(..))
 
@@ -15,6 +15,15 @@ type Focus
     = None
     | Focus File.Data
 
+
+toggleFolder : Id -> FileSystem -> FileSystem
+toggleFolder newId ((FileSystem focus node) as filesystem) =
+    case node of
+        Folder { id, visibility } children ->
+            if Id.equal newId id then
+                
+        File ->
+            filesystem
 
 updateFocus : Id -> FileSystem -> FileSystem
 updateFocus newId ((FileSystem focus node) as filesystem) =
@@ -65,14 +74,16 @@ outputNode parent (FileSystemState _ flags) =
             ]
 
         BuildDir ->
-            [ Node.makeClosedFolder "build"
+            [ Node.makeClosedFolder parent
+                "build"
                 [ Node.makeJsFile parent "elm" "Compiled Elm Here"
                 , Node.makeHtmlFile parent "index" Content.htmlMain
                 ]
             ]
 
         CustomBuildDir ->
-            [ Node.makeClosedFolder "build"
+            [ Node.makeClosedFolder parent
+                "build"
                 [ Node.makeHtmlFile parent "custom" Content.htmlMain
                 , Node.makeJsFile parent "elm" "Compiled Elm Here"
                 ]
@@ -83,7 +94,7 @@ generate : String -> Options -> List Node
 generate parent options =
     case options of
         Raw flags ->
-            [ Node.makeClosedFolder "src" [ Node.makeElmFile parent "Main" Content.elmMain ]
+            [ Node.makeClosedFolder parent "src" [ Node.makeElmFile parent "Main" Content.elmMain ]
             , Node.makeJsonFile parent "elm" Content.elmJson
             , Node.makeCssFile parent "style" Content.styleCss
             , Node.makeJsonFile parent "package" Content.packageJson
@@ -91,7 +102,7 @@ generate parent options =
 
         Compiled flags ->
             outputNode parent flags
-                ++ [ Node.makeClosedFolder "src" [ Node.makeElmFile parent "Main" Content.elmMain ]
+                ++ [ Node.makeClosedFolder parent "src" [ Node.makeElmFile parent "Main" Content.elmMain ]
                    , Node.makeJsonFile parent "elm" Content.elmJson
                    , Node.makeCssFile parent "style" Content.styleCss
                    , Node.makeJsonFile parent "package" Content.packageJson
@@ -103,7 +114,7 @@ fromOptions options =
     options
         |> generate "my-project"
         |> List.sortBy Node.sort
-        |> Node.makeOpenFolder "my-project"
+        |> Node.makeOpenFolder "root" "my-project"
         |> FileSystem None
 
 

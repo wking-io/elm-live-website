@@ -2,35 +2,47 @@ module View.FileSystem exposing (contents, files)
 
 import FileSystem exposing (FileSystem(..), Focus(..))
 import FileSystem.File.Extension as Extension
-import FileSystem.File.Id as Id exposing (Id)
 import FileSystem.Folder exposing (Visibility(..))
+import FileSystem.Id as Id exposing (Id)
 import FileSystem.Node as Node exposing (Node(..))
 import Html exposing (Html)
+import Html.Attributes as HA
+import Html.Events exposing (onClick)
 import View.File exposing (viewContent, viewItem)
 
 
-files : FileSystem -> (Id -> msg) -> Html msg
-files (FileSystem focus node) fileMsg =
-    Html.div [] (filesHelp focus fileMsg node)
+files : FileSystem -> (Id -> msg) -> (Id -> msg) -> Html msg
+files (FileSystem focus node) fileMsg folderMsg =
+    Html.div [ HA.attribute "role" "tablist", HA.attribute "aria-label" "File Select" ] (filesHelp focus fileMsg folderMsg node)
 
 
-filesHelp : Focus -> (Id -> msg) -> Node -> List (Html msg)
-filesHelp focus fileMsg node =
+filesHelp : Focus -> (Id -> msg) -> (Id -> msg) -> Node -> List (Html msg)
+filesHelp focus fileMsg folderMsg node =
     case node of
-        Folder { name, visibility } children ->
+        Folder { id, name, visibility } children ->
+            let
+                childrenHtml =
+                    List.concatMap (filesHelp focus fileMsg folderMsg) children
+            in
             case visibility of
                 Open ->
-                    [ Html.div []
-                        ([ Html.text name ]
-                            ++ List.concatMap (filesHelp focus fileMsg) children
-                        )
+                    [ Html.button
+                        [ HA.attribute "aria-expanded" "true"
+                        , HA.attribute "aria-controls" (Id.toString id)
+                        , onClick (folderMsg id)
+                        ]
+                        [ Html.text name ]
+                    , Html.div [ HA.id (Id.toString id) ] childrenHtml
                     ]
 
                 Closed ->
-                    [ Html.div []
-                        ([ Html.text name ]
-                            ++ List.concatMap (filesHelp focus fileMsg) children
-                        )
+                    [ Html.button
+                        [ HA.attribute "aria-expanded" "false"
+                        , HA.attribute "aria-controls" (Id.toString id)
+                        , onClick (folderMsg id)
+                        ]
+                        [ Html.text name ]
+                    , Html.div [ HA.id (Id.toString id), HA.hidden True ] childrenHtml
                     ]
 
         File data ->

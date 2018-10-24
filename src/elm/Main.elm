@@ -3,7 +3,7 @@ module Main exposing (main)
 import Browser
 import Browser.Dom as Dom exposing (Error(..))
 import FileSystem exposing (FileSystem)
-import FileSystem.File.Id as Id exposing (Id)
+import FileSystem.Id as Id exposing (Id)
 import FileSystem.Options as Options exposing (Options)
 import Html exposing (Html)
 import Html.Attributes as HA
@@ -28,7 +28,7 @@ type Msg
     | Compile
     | ChangeFocus Id
     | FocusResult (Result Dom.Error ())
-    | ToggleFolder
+    | ToggleFolder Id
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -55,8 +55,8 @@ update msg model =
                 Ok _ ->
                     ( model, Cmd.none )
 
-        ToggleFolder ->
-            ( model, Cmd.none )
+        ToggleFolder id ->
+            ( { model | filesystem = FileSystem.toggleFolder id model.filesystem }, Cmd.none )
 
 
 view : Model -> Html Msg
