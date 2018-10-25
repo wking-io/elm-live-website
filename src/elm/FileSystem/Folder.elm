@@ -1,4 +1,4 @@
-module FileSystem.Folder exposing (Data, Visibility(..), mapClosed, mapOpen)
+module FileSystem.Folder exposing (Data, Visibility(..), mapClosed, mapOpen, toggle)
 
 import FileSystem.Id exposing (Id)
 
@@ -13,6 +13,16 @@ type alias Data =
 type Visibility
     = Open
     | Closed
+
+
+toggle : Visibility -> Visibility
+toggle visibility =
+    case visibility of
+        Open ->
+            Closed
+
+        Closed ->
+            Open
 
 
 map3 : (Visibility -> a -> b -> c) -> Visibility -> (a -> b -> c)

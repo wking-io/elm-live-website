@@ -52,6 +52,20 @@ findFile id files =
                 findFile id rest
 
 
+toggleFolder : Id -> Node -> Node
+toggleFolder id node =
+    case node of
+        Folder data children ->
+            if Id.equal id data.id then
+                Folder { data | visibility = Folder.toggle data.visibility } children
+
+            else
+                toggleFolder id children
+
+        File data ->
+            File data
+
+
 makeFile : Extension -> String -> String -> String -> Node
 makeFile extension parent name contents =
     File
