@@ -5,9 +5,9 @@ import FileSystem.File.Extension as Extension
 import FileSystem.Folder exposing (Visibility(..))
 import FileSystem.Id as Id exposing (Id)
 import FileSystem.Node as Node exposing (Node(..))
-import Html exposing (Html)
-import Html.Attributes as HA
-import Html.Events exposing (onClick)
+import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes as HA
+import Html.Styled.Events exposing (onClick)
 import View.File exposing (viewContent, viewItem)
 
 

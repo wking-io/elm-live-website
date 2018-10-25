@@ -63,7 +63,7 @@ findFocus id node =
 
 
 outputNode : String -> FileSystemState -> List Node
-outputNode parent (FileSystemState _ flags) =
+outputNode parent (FileSystemState flags _) =
     case flags of
         Default ->
             [ Node.makeHtmlFile parent "index" "Compiled Elm Here" ]

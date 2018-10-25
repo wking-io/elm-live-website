@@ -4,9 +4,9 @@ import FileSystem exposing (Focus(..))
 import FileSystem.File as File
 import FileSystem.File.Extension as Extension
 import FileSystem.Id as Id exposing (Id)
-import Html exposing (Html)
-import Html.Attributes as HA
-import Html.Events exposing (onClick)
+import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes as HA
+import Html.Styled.Events exposing (onClick)
 
 
 viewItem : Focus -> File.Data -> (Id -> msg) -> Html msg

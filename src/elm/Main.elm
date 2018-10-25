@@ -3,13 +3,15 @@ module Main exposing (main)
 import Browser
 import Browser.Dom as Dom exposing (Error(..))
 import FileSystem exposing (FileSystem)
+import FileSystem.Flag exposing (Flag)
 import FileSystem.Id as Id exposing (Id)
 import FileSystem.Options as Options exposing (Options)
-import Html exposing (Html)
-import Html.Attributes as HA
-import Html.Events exposing (onClick)
+import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes as HA
+import Html.Styled.Events exposing (onClick)
 import Task
 import View.FileSystem exposing (contents, files)
+import View.Options as Options
 
 
 type alias Model =
@@ -29,6 +31,7 @@ type Msg
     | ChangeFocus Id
     | FocusResult (Result Dom.Error ())
     | ToggleFolder Id
+    | Check Flag
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -58,6 +61,9 @@ update msg model =
         ToggleFolder id ->
             ( { model | filesystem = FileSystem.toggleFolder id model.filesystem }, Cmd.none )
 
+        Check flag ->
+            ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view { filesystem } =
@@ -65,6 +71,7 @@ view { filesystem } =
         [ Html.div [ HA.class "flex" ]
             [ files filesystem ChangeFocus ToggleFolder
             , contents filesystem
+            , Options.view Check
             ]
         , Html.button [ onClick Compile ] [ Html.text "Compile" ]
         ]
@@ -74,7 +81,7 @@ main : Program () Model Msg
 main =
     Browser.element
         { init = initialModel
-        , view = view
+        , view = view >> Html.toUnstyled
         , update = update
         , subscriptions = \_ -> Sub.none
         }
