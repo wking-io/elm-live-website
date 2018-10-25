@@ -1,4 +1,4 @@
-module FileSystem.Node exposing (Node(..), find, makeClosedFolder, makeCssFile, makeElmFile, makeHtmlFile, makeJsFile, makeJsonFile, makeOpenFolder, sort)
+module FileSystem.Node exposing (Node(..), find, makeClosedFolder, makeCssFile, makeElmFile, makeHtmlFile, makeJsFile, makeJsonFile, makeOpenFolder, sort, toggleFolder)
 
 import FileSystem.File as File
 import FileSystem.File.Extension as Extension exposing (Extension(..))
@@ -60,7 +60,8 @@ toggleFolder id node =
                 Folder { data | visibility = Folder.toggle data.visibility } children
 
             else
-                toggleFolder id children
+                List.map (toggleFolder id) children
+                    |> Folder data
 
         File data ->
             File data

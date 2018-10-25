@@ -63,7 +63,7 @@ view : Model -> Html Msg
 view { filesystem } =
     Html.div []
         [ Html.div [ HA.class "flex" ]
-            [ files filesystem ChangeFocus
+            [ files filesystem ChangeFocus ToggleFolder
             , contents filesystem
             ]
         , Html.button [ onClick Compile ] [ Html.text "Compile" ]

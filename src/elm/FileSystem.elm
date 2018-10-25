@@ -1,4 +1,12 @@
-module FileSystem exposing (FileSystem(..), Focus(..), compile, default, fromOptions, updateFocus)
+module FileSystem exposing
+    ( FileSystem(..)
+    , Focus(..)
+    , compile
+    , default
+    , fromOptions
+    , toggleFolder
+    , updateFocus
+    )
 
 import FileSystem.File as File
 import FileSystem.File.Content as Content
@@ -17,13 +25,10 @@ type Focus
 
 
 toggleFolder : Id -> FileSystem -> FileSystem
-toggleFolder newId ((FileSystem focus node) as filesystem) =
-    case node of
-        Folder { id, visibility } children ->
-            if Id.equal newId id then
-                
-        File ->
-            filesystem
+toggleFolder id ((FileSystem focus node) as filesystem) =
+    Node.toggleFolder id node
+        |> FileSystem focus
+
 
 updateFocus : Id -> FileSystem -> FileSystem
 updateFocus newId ((FileSystem focus node) as filesystem) =
