@@ -4,6 +4,8 @@ import Css
 import Html.Styled as Html exposing (Attribute, Html)
 import Html.Styled.Attributes as HA
 import Html.Styled.Events exposing (onClick)
+import View.Var.Colors as Colors
+import View.Var.Fonts as Fonts
 
 
 type alias Config msg =
@@ -16,7 +18,7 @@ type alias Config msg =
 view : Config msg -> Html msg
 view { msg, name, id } =
     Html.styled Html.div
-        [ Css.overflow Css.hidden ]
+        []
         []
         [ checkboxLabel [ HA.for id, onClick msg ] [ Html.text name ]
         , checkboxInput [ HA.id id, HA.type_ "checkbox", onClick msg ] []
@@ -34,4 +36,14 @@ checkboxInput =
 checkboxLabel : List (Attribute msg) -> List (Html msg) -> Html msg
 checkboxLabel =
     Html.styled Html.label
-        [ Css.padding2 (Css.rem 1) (Css.rem 3) ]
+        [ Css.padding2 (Css.rem 2) (Css.rem 3)
+        , Css.border3 (Css.rem 0.5) Css.solid Colors.black
+        , Css.borderRadius (Css.rem 0.5)
+        , Css.backgroundImage Colors.gradient
+        , Css.backgroundPosition2 (Css.px -6) (Css.px 6)
+        , Css.backgroundRepeat Css.noRepeat
+        , Fonts.mono
+        , Css.margin2 (Css.rem 1) (Css.rem 1)
+        , Css.display Css.block
+        , Css.textAlign Css.center
+        ]

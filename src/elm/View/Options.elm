@@ -9,7 +9,10 @@ import Html.Styled.Attributes as HA
 view : (Flag -> msg) -> Html msg
 view msg =
     Html.styled Html.div
-        []
+        [ Css.displayFlex
+        , Css.flexDirection Css.row
+        , Css.flexWrap Css.wrap
+        ]
         []
         [ Flag.toHtml msg Port
         , Flag.toHtml msg PathToElm
